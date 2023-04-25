@@ -1,4 +1,4 @@
-import { phoneSearch } from "@/utils/api";
+import { gadgetSearch } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { IoMdSearch, IoMdClose } from "react-icons/io";
 
@@ -7,6 +7,7 @@ export const SearchBox = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSearch = (e) => {
     setQuery(e.target.value);
@@ -14,7 +15,7 @@ export const SearchBox = () => {
     setNoResults(false);
 
     if (e.target.value) {
-      fetch(`${phoneSearch}${e.target.value}`)
+      fetch(`${gadgetSearch}${e.target.value}`)
         .then((response) => response.json())
         .then((data) => {
           setIsLoading(false);
@@ -30,6 +31,14 @@ export const SearchBox = () => {
     }
   };
 
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+
   return (
     <div className="relative">
       <input
@@ -37,24 +46,26 @@ export const SearchBox = () => {
         placeholder="Search..."
         value={query}
         onChange={handleSearch}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         className="border border-gray-300 rounded-md pl-10 pr-3 py-2 w-full focus:outline-none focus:ring focus:ring-blue-400 mr-4"
       />
-      {isLoading && (
-        <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 rounded-md w-full">
+      {isFocused && isLoading && (
+        <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 dark:border-gray-800  dark:bg-gray-900 rounded-md w-full">
           <div className="px-3 py-2">Searching...</div>
         </div>
       )}
-      {noResults && (
-        <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 rounded-md w-full">
+      {isFocused && noResults && (
+        <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 dark:border-gray-800  dark:bg-gray-900 rounded-md w-full">
           <div className="px-3 py-2">No results</div>
         </div>
       )}
-      {suggestions.length > 0 && (
-        <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 rounded-md w-full">
+      {isFocused && suggestions.length > 0 && (
+        <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 dark:border-gray-800  dark:bg-gray-900 rounded-md w-full">
           {suggestions.map((suggestion) => (
             <div
               key={suggestion}
-              className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+              className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
             >
               {suggestion}
             </div>
