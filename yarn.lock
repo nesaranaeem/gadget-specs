@@ -72,6 +72,8 @@
 
 "@emotion/react@^11.10.6", "@emotion/react@^11.8.1":
   version "11.10.6"
+  resolved "https://registry.npmjs.org/@emotion/react/-/react-11.10.6.tgz"
+  integrity sha512-6HT8jBmcSkfzO7mc+N1L9uwvOnlcGoix8Zn7srt+9ga0MjREo6lRpuVX0kzo6Jp6oTqDhREOFsygN6Ew4fEQbw==
   dependencies:
     "@babel/runtime" "^7.18.3"
     "@emotion/babel-plugin" "^11.10.6"

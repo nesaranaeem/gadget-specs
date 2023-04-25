@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CommonCard from "@/components/cards/common/CommonCard";
 import { allGadgets } from "@/utils/api";
 import { BeatLoader } from "react-spinners";
@@ -11,19 +11,24 @@ export default function LatestGadgets() {
   const router = useRouter();
   const [itemsPerPage, setItemsPerPage] = useState(16);
   const maxPageNumbersToShow = 5;
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Extract the page number from the URL or default to 1
-  const currentPage = parseInt(router.query.page) || 1;
+  useEffect(() => {
+    const { id } = router.query;
+    if (id) {
+      setCurrentPage(parseInt(id));
+    }
+  }, [router.query]);
 
   const { data, error, isLoading } = useSWR(
-    `${allGadgets}?page=${currentPage}&limit=${itemsPerPage}`,
+    `${allGadgets}page=${currentPage}&limit=${itemsPerPage}`,
     fetcher
   );
 
   const gadgets = data?.gadgets || [];
   const totalItems = data?.total_count || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
+  console.log(gadgets);
   if (error) return <div>Failed to load gadgets</div>;
   if (!data && isLoading)
     return (
@@ -34,6 +39,7 @@ export default function LatestGadgets() {
 
   const handlePageChange = (pageNumber) => {
     router.push(`/page/${pageNumber}`);
+    setCurrentPage(pageNumber);
   };
 
   const handleItemsPerPageChange = (event) => {
@@ -79,7 +85,7 @@ export default function LatestGadgets() {
         Latest Items
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {paginatedGadgets.map((gadget) => (
+        {gadgets.map((gadget) => (
           <CommonCard key={gadget._id} gadget={gadget} />
         ))}
       </div>
@@ -125,7 +131,6 @@ export default function LatestGadgets() {
             Next
           </button>
         </nav>
-        {/* code */}
       </div>
     </div>
   );
