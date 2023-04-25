@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CommonCard from "@/components/cards/common/CommonCard";
 import { allGadgets } from "@/utils/api";
 import { BeatLoader } from "react-spinners";
@@ -14,6 +14,13 @@ export default function LatestGadgets() {
 
   // Extract the page number from the URL or default to 1
   const currentPage = parseInt(router.query.page) || 1;
+
+  useEffect(() => {
+    const storedItemsPerPage = localStorage.getItem("itemsPerPage");
+    if (storedItemsPerPage) {
+      setItemsPerPage(parseInt(storedItemsPerPage));
+    }
+  }, []);
 
   const { data, error, isLoading } = useSWR(
     `${allGadgets}?page=${currentPage}&limit=${itemsPerPage}`,
@@ -37,8 +44,10 @@ export default function LatestGadgets() {
   };
 
   const handleItemsPerPageChange = (event) => {
-    setItemsPerPage(parseInt(event.target.value));
-    router.push("/page/1");
+    const value = parseInt(event.target.value);
+    setItemsPerPage(value);
+    localStorage.setItem("itemsPerPage", value);
+    router.push("/");
   };
 
   const paginatedGadgets = gadgets.slice(
@@ -78,7 +87,25 @@ export default function LatestGadgets() {
       <h1 className="text-2xl font-bold mb-4 text-center dark:text-white">
         Latest Items
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="flex justify-center pb-4">
+        <div className="ml-3">
+          <label htmlFor="itemsPerPage" className="font-medium mr-2">
+            Items per page:
+          </label>
+          <select
+            id="itemsPerPage"
+            name="itemsPerPage"
+            value={itemsPerPage}
+            onChange={handleItemsPerPageChange}
+            className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="8">8</option>
+            <option value="16">16</option>
+            <option value="24">24</option>
+          </select>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {paginatedGadgets.map((gadget) => (
           <CommonCard key={gadget._id} gadget={gadget} />
         ))}

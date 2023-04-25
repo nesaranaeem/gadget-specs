@@ -7,7 +7,7 @@ export default function MainLayout({ children }) {
   return (
     <ThemeProvider attribute="class">
       <Header />
-      <div className="min-h-screen flex flex-col lg:flex-row bg-white shadow-lg dark:bg-gray-900">
+      <div className="min-h-screen flex flex-row lg:flex-row bg-white shadow-lg dark:bg-gray-900">
         {/*
           Show the aside item only on screens wider than lg (large)
           and give it 3 columns (out of 12) width.

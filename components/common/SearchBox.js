@@ -1,4 +1,5 @@
 import { gadgetSearch } from "@/utils/api";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { IoMdSearch, IoMdClose } from "react-icons/io";
 
@@ -47,7 +48,6 @@ export const SearchBox = () => {
         value={query}
         onChange={handleSearch}
         onFocus={handleFocus}
-        onBlur={handleBlur}
         className="border border-gray-300 rounded-md pl-10 pr-3 py-2 w-full focus:outline-none focus:ring focus:ring-blue-400 mr-4"
       />
       {isFocused && isLoading && (
@@ -63,15 +63,18 @@ export const SearchBox = () => {
       {isFocused && suggestions.length > 0 && (
         <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 dark:border-gray-800  dark:bg-gray-900 rounded-md w-full">
           {suggestions.map((suggestion) => (
-            <div
+            <Link
               key={suggestion}
-              className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              href={`/details/${suggestion.replace(/\s+/g, "-").toLowerCase()}`}
+              className="block px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              onClick={() => setIsFocused(false)}
             >
               {suggestion}
-            </div>
+            </Link>
           ))}
         </div>
       )}
+
       <div className="absolute top-0 right-0 mt-3 mr-3">
         <IoMdSearch size={24} />
       </div>

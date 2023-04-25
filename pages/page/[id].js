@@ -9,7 +9,11 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function LatestGadgets() {
   const router = useRouter();
-  const [itemsPerPage, setItemsPerPage] = useState(16);
+  const [itemsPerPage, setItemsPerPage] = useState(
+    typeof window !== "undefined"
+      ? parseInt(localStorage.getItem("itemsPerPage")) || 16
+      : 16
+  );
   const maxPageNumbersToShow = 5;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -20,6 +24,12 @@ export default function LatestGadgets() {
     }
   }, [router.query]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("itemsPerPage", itemsPerPage);
+    }
+  }, [itemsPerPage]);
+
   const { data, error, isLoading } = useSWR(
     `${allGadgets}page=${currentPage}&limit=${itemsPerPage}`,
     fetcher
@@ -28,7 +38,7 @@ export default function LatestGadgets() {
   const gadgets = data?.gadgets || [];
   const totalItems = data?.total_count || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  console.log(gadgets);
+
   if (error) return <div>Failed to load gadgets</div>;
   if (!data && isLoading)
     return (
@@ -44,7 +54,7 @@ export default function LatestGadgets() {
 
   const handleItemsPerPageChange = (event) => {
     setItemsPerPage(parseInt(event.target.value));
-    router.push("/page/1");
+    router.push(`/page/${currentPage}`);
   };
 
   const paginatedGadgets = gadgets.slice(
@@ -84,7 +94,25 @@ export default function LatestGadgets() {
       <h1 className="text-2xl font-bold mb-4 text-center dark:text-white">
         Latest Items
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="flex justify-center pb-4">
+        <div className="ml-3">
+          <label htmlFor="itemsPerPage" className="font-medium mr-2">
+            Items per page:
+          </label>
+          <select
+            id="itemsPerPage"
+            name="itemsPerPage"
+            value={itemsPerPage}
+            onChange={handleItemsPerPageChange}
+            className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="8">8</option>
+            <option value="16">16</option>
+            <option value="20">24</option>
+          </select>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {gadgets.map((gadget) => (
           <CommonCard key={gadget._id} gadget={gadget} />
         ))}
@@ -109,7 +137,7 @@ export default function LatestGadgets() {
               <button
                 key={pageNumber}
                 onClick={() => handlePageChange(pageNumber)}
-                className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
+                className={`relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium ${
                   isActive
                     ? "text-indigo-600 bg-indigo-100"
                     : "text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
@@ -121,7 +149,7 @@ export default function LatestGadgets() {
           })}
           <button
             onClick={() => handlePageChange(currentPage + 1)}
-            className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
+            className={`relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium ${
               currentPage === totalPages
                 ? "text-gray-500 cursor-not-allowed"
                 : "text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
