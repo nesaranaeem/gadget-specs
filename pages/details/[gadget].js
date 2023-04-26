@@ -110,8 +110,8 @@ function GadgetPage({ gadget }) {
                 <h1 className="text-lg font-medium text-gray-900 dark:text-white">
                   {data.title}
                 </h1>
-                By: <span className="uppercase"> {data.brand}</span>
-                <p class="gray-400 whitespace-normal dark:text-gray-400">
+                By: <span className="uppercase text-black"> {data.brand}</span>
+                <p class="gray-400 whitespace-normal text-black dark:text-gray-400">
                   {data?.title} {data.category} Price starts from{" "}
                   <span className="font-bold">
                     {data.price?.replace(" (approx)", "") === "0.00 Taka" ? (
@@ -128,14 +128,14 @@ function GadgetPage({ gadget }) {
           <div className="container mx-auto my-10">
             <table className="w-full table-fixed border-collapse border border-gray-400">
               <thead>
-                <tr className="bg-gray-200 dark:bg-gray-800 dark:text-white">
+                <tr className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white">
                   <th
-                    className="w-2/4 p-2 border border-gray-400 dark:bg-gray-800
+                    className="w-2/4 p-2 border border-gray-400 text-black dark:bg-gray-800
              dark:text-white"
                   >
                     Specification
                   </th>
-                  <th className="w-2/4 p-2 border border-gray-400 dark:bg-gray-800 dark:text-white">
+                  <th className="w-2/4 p-2 border border-gray-400 text-black dark:bg-gray-800 dark:text-white">
                     Details
                   </th>
                 </tr>
@@ -152,10 +152,10 @@ function GadgetPage({ gadget }) {
                           (index + 1) % 2 === 0 ? "bg-gray-100" : "bg-white"
                         }
                       >
-                        <td className="p-4 border border-gray-400 dark:bg-gray-800 dark:text-white">
+                        <td className="p-4 border border-gray-400 dark:bg-gray-800 text-black dark:text-white">
                           {formatGadgetTitle(key)}
                         </td>
-                        <td className="p-4 border border-gray-400 dark:bg-gray-800 dark:text-white text-justify">
+                        <td className="p-4 border border-gray-400 dark:bg-gray-800 text-black dark:text-white text-justify">
                           {spec[key]}
                         </td>
                       </tr>

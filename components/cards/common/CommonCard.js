@@ -15,7 +15,7 @@ const CommonCard = ({ gadget }) => {
       />
 
       <div className="p-4">
-        <h2 className="lg:text-lg xl:text-lg text-sm font-bold mb-2 lg:w-48 xl:w-48 dark:text-white">
+        <h2 className="lg:text-lg xl:text-lg text-sm font-bold mb-2 lg:w-48 xl:w-48 text-black dark:text-white">
           {gadget.title}
         </h2>
         <p className="text-gray-700 mb-2 dark:text-white">{gadget.brand}</p>
