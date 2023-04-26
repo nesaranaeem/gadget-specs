@@ -1,4 +1,5 @@
-import { getDetails } from "@/utils/api";
+import RelatedCard from "@/components/cards/related/RelatedCard";
+import { gadgetByBrand, getDetails } from "@/utils/api";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -33,7 +34,9 @@ function GadgetPage({ gadget }) {
 
     return finalTitle;
   }
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [relatedData, setRelatedData] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -43,6 +46,15 @@ function GadgetPage({ gadget }) {
     const response = await fetch(`${getDetails}${gadget}`);
     const result = await response.json();
     setData(result.data[0]);
+    setLoading(false);
+  };
+  const fetchRelatedData = async () => {
+    const response = await fetch(
+      `${gadgetByBrand}${data.brand}&page=1&limit=8`
+    );
+    const result = await response.json();
+    setRelatedData(result.data);
+    setLoading(false);
   };
   function formatGadgetTitle(title) {
     // Return title as is if it has 4 or fewer characters
@@ -68,85 +80,121 @@ function GadgetPage({ gadget }) {
 
     return finalTitle;
   }
-
+  fetchRelatedData();
   return (
     <>
-      <Head>
-        <title>
-          {data.title} {data.category} Price & Specs BD
-        </title>
-      </Head>
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="text-3xl font-bold dark:text-white">{data.title}</h1>
-        <Image src={data.imageURL} alt={data.title} width={500} height={500} />
-        <div
-          className="mt-5 text-lg
-                dark:text-white"
-        >
-          <div className="text-center">
-            <h1 className="text-lg font-medium text-gray-900 dark:text-white">
-              {data.title}
-            </h1>
-            By: <span className="uppercase"> {data.brand}</span>
-            <p class="gray-400 whitespace-normal dark:text-gray-400">
-              {data?.title} {data.category} Price starts from{" "}
-              {data.price?.replace(" (approx)", "") === "0.00 Taka" ? (
-                <span className="text-red-600">TBA</span>
+      {loading ? (
+        <div className="w-full h-screen flex justify-center items-center">
+          <BeatLoader color="#4B5563" />
+        </div>
+      ) : (
+        <>
+          <Head>
+            <title>
+              {data.title} {data.category} Price & Specs BD
+            </title>
+          </Head>
+          <div className="flex flex-col items-center justify-center">
+            <h1 className="text-3xl font-bold dark:text-white">{data.title}</h1>
+            <Image
+              src={data.imageURL}
+              alt={data.title}
+              width={500}
+              height={500}
+            />
+            <div
+              className="mt-5 text-lg
+             dark:text-white"
+            >
+              <div className="text-center">
+                <h1 className="text-lg font-medium text-gray-900 dark:text-white">
+                  {data.title}
+                </h1>
+                By: <span className="uppercase"> {data.brand}</span>
+                <p class="gray-400 whitespace-normal dark:text-gray-400">
+                  {data?.title} {data.category} Price starts from{" "}
+                  <span className="font-bold">
+                    {data.price?.replace(" (approx)", "") === "0.00 Taka" ? (
+                      <span className="text-red-600">TBA</span>
+                    ) : (
+                      data.price?.replace(" (approx)", "").replace(".00", "")
+                    )}
+                  </span>
+                  .
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="container mx-auto my-10">
+            <table className="w-full table-fixed border-collapse border border-gray-400">
+              <thead>
+                <tr className="bg-gray-200 dark:bg-gray-800 dark:text-white">
+                  <th
+                    className="w-2/4 p-2 border border-gray-400 dark:bg-gray-800
+             dark:text-white"
+                  >
+                    Specification
+                  </th>
+                  <th className="w-2/4 p-2 border border-gray-400 dark:bg-gray-800 dark:text-white">
+                    Details
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Render the rows dynamically */}
+                {data.specifications?.map((spec, index) => (
+                  <Fragment key={index}>
+                    {/* Loop through each key in the current object and render a cell with the corresponding value */}
+                    {Object.keys(spec)?.map((key, index) => (
+                      <tr
+                        key={index}
+                        className={
+                          (index + 1) % 2 === 0 ? "bg-gray-100" : "bg-white"
+                        }
+                      >
+                        <td className="p-4 border border-gray-400 dark:bg-gray-800 dark:text-white">
+                          {formatGadgetTitle(key)}
+                        </td>
+                        <td className="p-4 border border-gray-400 dark:bg-gray-800 dark:text-white text-justify">
+                          {spec[key]}
+                        </td>
+                      </tr>
+                    ))}
+                  </Fragment>
+                ))}
+              </tbody>
+            </table>
+            <div>
+              <div className="text-center">
+                <h4 class="my-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-xl lg:text-xl dark:text-white">
+                  More By
+                  <mark class="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">
+                    {data.brand}
+                  </mark>{" "}
+                </h4>
+              </div>
+
+              {loading ? (
+                <p>loading</p>
               ) : (
-                data.price?.replace(" (approx)", "").replace(".00", "")
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                  {relatedData?.map((gadget) => (
+                    <RelatedCard key={gadget._id} gadget={gadget} />
+                  ))}
+                </div>
               )}
-              .
+            </div>
+            <p className="my-2 dark:text-white text-justify p-3">
+              It is impossible to guarantee that the information above is
+              entirely correct. When analyzing data, mistakes or inaccuracies
+              are always a possibility. Typically, we get information from
+              dependable sites like the websites of manufacturers. We kindly
+              request that you report us if you come across any errors or false
+              information in our content.
             </p>
           </div>
-        </div>
-      </div>
-      <div className="container mx-auto my-10">
-        <table className="w-full table-fixed border-collapse border border-gray-400">
-          <thead>
-            <tr className="bg-gray-200 dark:bg-gray-800 dark:text-white">
-              <th
-                className="w-2/4 p-2 border border-gray-400 dark:bg-gray-800
-                dark:text-white"
-              >
-                Specification
-              </th>
-              <th className="w-2/4 p-2 border border-gray-400 dark:bg-gray-800 dark:text-white">
-                Details
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Render the rows dynamically */}
-            {data.specifications?.map((spec, index) => (
-              <Fragment key={index}>
-                {/* Loop through each key in the current object and render a cell with the corresponding value */}
-                {Object.keys(spec)?.map((key, index) => (
-                  <tr
-                    key={index}
-                    className={
-                      (index + 1) % 2 === 0 ? "bg-gray-100" : "bg-white"
-                    }
-                  >
-                    <td className="p-2 border border-gray-400 dark:bg-gray-800 dark:text-white">
-                      {formatGadgetTitle(key)}
-                    </td>
-                    <td className="p-2 border border-gray-400 dark:bg-gray-800 dark:text-white text-justify">
-                      {spec[key]}
-                    </td>
-                  </tr>
-                ))}
-              </Fragment>
-            ))}
-          </tbody>
-        </table>
-        <p className="py-2 dark:text-white">
-          It is impossible to guarantee that the information above is entirely
-          correct. When analyzing data, mistakes or inaccuracies are always a
-          possibility. Typically, we get information from dependable sites like
-          the websites of manufacturers. We kindly request that you report us if
-          you come across any errors or false information in our content.
-        </p>
-      </div>
+        </>
+      )}
     </>
   );
 }

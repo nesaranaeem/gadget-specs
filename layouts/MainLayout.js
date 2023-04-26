@@ -17,7 +17,7 @@ export default function MainLayout({ children }) {
         </aside>
 
         <div className="flex-grow">
-          <main className="container mx-auto">
+          <main className="container mx-auto px-2">
             {/* 
               Show the children in 9 columns (out of 12) width 
               on all screens.

@@ -16,21 +16,23 @@ export const SearchBox = () => {
     setNoResults(false);
 
     if (e.target.value) {
-      fetch(`${gadgetSearch}${e.target.value}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setIsLoading(false);
-          if (data.data?.length > 0) {
-            setSuggestions(
-              data.data.map((item) => ({
-                title: item.title,
-                id: item._id.slice(-5), // get last 5 digits of _id
-              }))
-            );
-          } else {
-            setNoResults(true);
-          }
-        });
+      setTimeout(() => {
+        fetch(`${gadgetSearch}${e.target.value}`)
+          .then((response) => response.json())
+          .then((data) => {
+            setIsLoading(false);
+            if (data.data?.length > 0) {
+              setSuggestions(
+                data.data.map((item) => ({
+                  title: item.title,
+                  id: item._id.slice(-5), // get last 5 digits of _id
+                }))
+              );
+            } else {
+              setNoResults(true);
+            }
+          });
+      }, 200); // delay
     } else {
       setIsLoading(false);
       setSuggestions([]);
