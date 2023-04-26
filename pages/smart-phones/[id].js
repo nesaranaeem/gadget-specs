@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { useState, useEffect } from "react";
 import CommonCard from "@/components/cards/common/CommonCard";
-import { allGadgets } from "@/utils/api";
+import { allGadgets, smartPhones, smartWatches } from "@/utils/api";
 import { BeatLoader } from "react-spinners";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -31,7 +31,7 @@ export default function LatestGadgets() {
   }, [itemsPerPage]);
 
   const { data, error, isLoading } = useSWR(
-    `${allGadgets}page=${currentPage}&limit=${itemsPerPage}`,
+    `${smartPhones}page=${currentPage}&limit=${itemsPerPage}`,
     fetcher
   );
 
@@ -48,13 +48,13 @@ export default function LatestGadgets() {
     );
 
   const handlePageChange = (pageNumber) => {
-    router.push(`/page/${pageNumber}`);
+    router.push(`/smart-phones/${pageNumber}`);
     setCurrentPage(pageNumber);
   };
 
   const handleItemsPerPageChange = (event) => {
     setItemsPerPage(parseInt(event.target.value));
-    router.push(`/page/${currentPage}`);
+    router.push(`/smart-phones/${currentPage}`);
   };
 
   const paginatedGadgets = gadgets.slice(

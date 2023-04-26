@@ -9,8 +9,8 @@ function GadgetPage({ gadget }) {
   const router = useRouter();
   if (router.isFallback) {
     return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <BeatLoader color="#4B5563" />
+      <div className="flex justify-end items-center">
+        <BeatLoader className="my-12" color="#4B5563" />
       </div>
     );
   }
@@ -84,8 +84,8 @@ function GadgetPage({ gadget }) {
   return (
     <>
       {loading ? (
-        <div className="w-full h-screen flex justify-center items-center">
-          <BeatLoader color="#4B5563" />
+        <div className="flex justify-end items-center">
+          <BeatLoader className="my-12" color="#4B5563" />
         </div>
       ) : (
         <>
@@ -110,7 +110,11 @@ function GadgetPage({ gadget }) {
                 <h1 className="text-lg font-medium text-gray-900 dark:text-white">
                   {data.title}
                 </h1>
-                By: <span className="uppercase text-black"> {data.brand}</span>
+                By:{" "}
+                <span className="uppercase text-black dark:text-white">
+                  {" "}
+                  {data.brand}
+                </span>
                 <p class="gray-400 whitespace-normal text-black dark:text-gray-400">
                   {data?.title} {data.category} Price starts from{" "}
                   <span className="font-bold">

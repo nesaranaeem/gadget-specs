@@ -14,7 +14,8 @@ const ListGroup = ({ items }) => {
           className="py-4 px-2 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
         >
           <Link
-            href={`/brands/${item.brandName.toLowerCase()}`}
+            //  href={`/brands/${item.brandName.toLowerCase()}`}
+            href={`#`}
             className="block"
           >
             <p className="text-lg font-medium text-gray-900 dark:text-white">
@@ -58,7 +59,7 @@ const LeftSide = () => {
           <>
             <ListGroup items={brands} />
             <Link
-              href={`/brands`}
+              href={`#`}
               className="block py-4 px-2 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               <p className="font-bold text-lg text-gray-900 dark:text-white">

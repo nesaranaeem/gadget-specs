@@ -2,12 +2,13 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { useState, useEffect } from "react";
 import CommonCard from "@/components/cards/common/CommonCard";
-import { allGadgets } from "@/utils/api";
+import { allGadgets, smartPhones, smartWatches } from "@/utils/api";
 import { BeatLoader } from "react-spinners";
+import Head from "next/head";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function LatestGadgets() {
+export default function Index() {
   const router = useRouter();
   const [itemsPerPage, setItemsPerPage] = useState(16);
   const maxPageNumbersToShow = 5;
@@ -23,7 +24,7 @@ export default function LatestGadgets() {
   }, []);
 
   const { data, error, isLoading } = useSWR(
-    `${allGadgets}?page=${currentPage}&limit=${itemsPerPage}`,
+    `${smartPhones}?page=${currentPage}&limit=${itemsPerPage}`,
     fetcher
   );
 
@@ -40,14 +41,14 @@ export default function LatestGadgets() {
     );
 
   const handlePageChange = (pageNumber) => {
-    router.push(`/page/${pageNumber}`);
+    router.push(`/smart-phones/${pageNumber}`);
   };
 
   const handleItemsPerPageChange = (event) => {
     const value = parseInt(event.target.value);
     setItemsPerPage(value);
     localStorage.setItem("itemsPerPage", value);
-    router.push("/");
+    router.push("/smart-phones");
   };
 
   const paginatedGadgets = gadgets.slice(
@@ -84,6 +85,9 @@ export default function LatestGadgets() {
 
   return (
     <>
+      <Head>
+        <title>Smart Watches Specs | Price</title>
+      </Head>
       <div className="container mx-auto py-2">
         <h1 className="text-2xl font-bold mb-4 text-center dark:text-white">
           Latest Items
