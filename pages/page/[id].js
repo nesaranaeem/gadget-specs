@@ -94,7 +94,7 @@ export default function LatestGadgets() {
       <h1 className="text-2xl font-bold mb-4 text-center dark:text-white">
         Latest Items
       </h1>
-      <div className="flex justify-center pb-4">
+      <div className="flex justify-center pb-4 text-black dark:text-white">
         <div className="ml-3">
           <label htmlFor="itemsPerPage" className="font-medium mr-2">
             Items per page:
