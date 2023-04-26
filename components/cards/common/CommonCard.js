@@ -1,13 +1,19 @@
+import Image from "next/image";
 import Link from "next/link";
 import { TbCurrencyTaka } from "react-icons/tb";
 const CommonCard = ({ gadget }) => {
+  const lastFiveDigits = gadget._id.slice(-5);
+
   return (
     <div className="bg-white rounded-lg shadow-lg dark:bg-gray-900 dark:text-white">
-      <img
+      <Image
         src={gadget.imageURL}
         alt={gadget.title}
         className="w-full rounded-t-lg"
+        width={500}
+        height={500}
       />
+
       <div className="p-4">
         <h2 className="lg:text-lg xl:text-lg text-sm font-bold mb-2 lg:w-48 xl:w-48 dark:text-white">
           {gadget.title}
@@ -22,7 +28,9 @@ const CommonCard = ({ gadget }) => {
         </p>
 
         <Link
-          href={`/details/${gadget.title.replace(/\s+/g, "-").toLowerCase()}`}
+          href={`/details/${gadget.title
+            .replace(/\s+/g, "-")
+            .toLowerCase()}-${lastFiveDigits}`}
           className="bg-blue-500 text-white px-4 py-2 rounded-lg block text-center"
         >
           View Details

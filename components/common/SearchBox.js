@@ -21,7 +21,12 @@ export const SearchBox = () => {
         .then((data) => {
           setIsLoading(false);
           if (data.data?.length > 0) {
-            setSuggestions(data.data.map((item) => item.title));
+            setSuggestions(
+              data.data.map((item) => ({
+                title: item.title,
+                id: item._id.slice(-5), // get last 5 digits of _id
+              }))
+            );
           } else {
             setNoResults(true);
           }
@@ -64,12 +69,14 @@ export const SearchBox = () => {
         <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 dark:border-gray-800  dark:bg-gray-900 rounded-md w-full">
           {suggestions.map((suggestion) => (
             <Link
-              key={suggestion}
-              href={`/details/${suggestion.replace(/\s+/g, "-").toLowerCase()}`}
+              key={suggestion.title}
+              href={`/details/${suggestion.title
+                .replace(/\s+/g, "-")
+                .toLowerCase()}-${suggestion.id}`}
               className="block px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
               onClick={() => setIsFocused(false)}
             >
-              {suggestion}
+              {suggestion.title}
             </Link>
           ))}
         </div>
