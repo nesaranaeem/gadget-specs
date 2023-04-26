@@ -130,7 +130,7 @@ function GadgetPage({ gadget }) {
                     <td className="p-2 border border-gray-400 dark:bg-gray-800 dark:text-white">
                       {formatGadgetTitle(key)}
                     </td>
-                    <td className="p-2 border border-gray-400 dark:bg-gray-800 dark:text-white">
+                    <td className="p-2 border border-gray-400 dark:bg-gray-800 dark:text-white text-justify">
                       {spec[key]}
                     </td>
                   </tr>
