@@ -21,12 +21,11 @@ export default function LatestGadgets() {
   );
   const maxPageNumbersToShow = 5;
   const [currentPage, setCurrentPage] = useState(1);
-  const [brand, setBrand] = useState(null);
+
   useEffect(() => {
     const { id } = router.query;
     if (id) {
-      setCurrentPage(parseInt(id)); //chat gpt solve this. this is error
-      setBrand(id);
+      setCurrentPage(parseInt(id));
     }
   }, [router.query]);
 
@@ -37,11 +36,11 @@ export default function LatestGadgets() {
   }, [itemsPerPage]);
 
   const { data, error, isLoading } = useSWR(
-    `${gadgetByBrand}${brand}&page=${currentPage}&limit=${itemsPerPage}`,
+    `${gadgetByBrand}page=${currentPage}&limit=${itemsPerPage}`,
     fetcher
   );
 
-  const gadgets = data?.data || [];
+  const gadgets = data?.gadgets || [];
   const totalItems = data?.total_count || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -54,13 +53,13 @@ export default function LatestGadgets() {
     );
 
   const handlePageChange = (pageNumber) => {
-    router.push(`/brand/${pageNumber}`);
+    router.push(`/smart-phones/${pageNumber}`);
     setCurrentPage(pageNumber);
   };
 
   const handleItemsPerPageChange = (event) => {
     setItemsPerPage(parseInt(event.target.value));
-    router.push(`/${currentPage}`);
+    router.push(`/smart-phones/${currentPage}`);
   };
 
   const paginatedGadgets = gadgets.slice(

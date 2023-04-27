@@ -3,6 +3,8 @@ import MainLayout from "@/layouts/MainLayout";
 import "@/styles/globals.css";
 import store from "@/store/store";
 import NextNProgress from "nextjs-progressbar";
+import { DefaultSeo } from "next-seo";
+import SEO from "../next-seo.config";
 export default function App({ Component, pageProps }) {
   return (
     <Provider store={store}>
@@ -14,6 +16,7 @@ export default function App({ Component, pageProps }) {
           height={3}
           showOnShallow={true}
         />
+        <DefaultSeo {...SEO} />
         <Component {...pageProps} />
       </MainLayout>
     </Provider>
