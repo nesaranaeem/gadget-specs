@@ -88,20 +88,13 @@ const Gadgets = ({ gadgetsData }) => {
   // Create an array for the pagination buttons
   const paginationButtons = [];
 
-  // Add previous button
-  if (hasPrevious) {
-    paginationButtons.push({ page: startPage - 1, label: "Previous" });
-  }
-
+  
   // Add page number buttons
   for (let i = 0; i < pageNumbers.length; i++) {
     paginationButtons.push({ page: pageNumbers[i], label: pageNumbers[i] });
   }
 
-  // Add next button
-  if (hasNext) {
-    paginationButtons.push({ page: endPage + 1, label: "Next" });
-  }
+ 
 
   const handleItemsPerPageChange = (event) => {
     const value = parseInt(event.target.value);
