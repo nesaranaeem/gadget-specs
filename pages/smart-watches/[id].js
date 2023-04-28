@@ -85,7 +85,8 @@ const Id = ({ gadgetsData }) => {
 
   // Determine if there are next pages
   const hasNext = endPage < totalPages;
-
+// Create an array for the pagination buttons
+  const paginationButtons = [];
   /* Add previous button
   if (hasPrevious) {
     paginationButtons.push({ page: startPage - 1, label: "Previous" });
