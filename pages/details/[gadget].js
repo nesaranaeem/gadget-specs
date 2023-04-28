@@ -1,26 +1,27 @@
-import RelatedCard from "@/components/cards/related/RelatedCard";
-import { gadgetByBrand, getDetails } from "@/utils/api";
-import Head from "next/head";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import CommonCard from "@/components/cards/common/CommonCard";
+import axios from "axios";
 import { BeatLoader } from "react-spinners";
-function GadgetPage({ gadget }) {
-  const router = useRouter();
-  if (router.isFallback) {
-    return (
-      <div className="flex justify-end items-center">
-        <BeatLoader className="my-12" color="#4B5563" />
-      </div>
+import { Fragment, useState } from "react";
+import dotenv from "dotenv";
+import { NextSeo } from "next-seo";
+import Image from "next/image";
+import RelatedCard from "@/components/cards/related/RelatedCard";
+import Link from "next/link";
+dotenv.config();
+const apiKey = process.env.API_KEY;
+const Id = ({ details, dataLoaded }) => {
+  const data = details.data[0];
+  const [relatedData, setRelatedData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fetchRelatedData = async () => {
+    const response = await fetch(
+      `https://specificationsbd.vercel.app/api/v1/gadgets?brandName=${data.brand}&page=1&limit=8`
     );
-  }
-
-  // Format gadget title for display
-  function decodeGadgetParam(gadget) {
-    return decodeURIComponent(gadget);
-  }
-  const decodedGadget = decodeGadgetParam(gadget);
-
+    const result = await response.json();
+    setRelatedData(result.data);
+    setLoading(false);
+  };
+  console.log(relatedData);
   function formatGadgetTitle(title) {
     // Replace hyphens with spaces
     const formattedTitle = title.replace(/-/g, " ");
@@ -34,66 +35,83 @@ function GadgetPage({ gadget }) {
 
     return finalTitle;
   }
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [relatedData, setRelatedData] = useState([]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    const response = await fetch(`${getDetails}${gadget}`);
-    const result = await response.json();
-    setData(result.data[0]);
-    setLoading(false);
-  };
-  const fetchRelatedData = async () => {
-    const response = await fetch(
-      `${gadgetByBrand}${data.brand}&page=1&limit=8`
-    );
-    const result = await response.json();
-    setRelatedData(result.data);
-    setLoading(false);
-  };
-  function formatGadgetTitle(title) {
-    // Return title as is if it has 4 or fewer characters
-    if (title.length <= 4) {
-      return title;
-    }
-
-    // Replace hyphens with spaces
-    const formattedTitle = title.replace(/-/g, " ");
-
-    // Insert space before every capitalized letter except the first one
-    const spacedTitle = formattedTitle.replace(/([A-Z])/g, " $1");
-
-    // Insert space before every number that is not followed by four digits
-    const spacedNumbers = spacedTitle.replace(/(\d+)(?!\d{4})/g, " $1");
-
-    // Capitalize first letter of each word
-    const words = spacedNumbers.split(" ");
-    const capitalizedWords = words.map((word) => {
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    });
-    const finalTitle = capitalizedWords.join(" ");
-
-    return finalTitle;
-  }
   fetchRelatedData();
   return (
     <>
-      {loading ? (
-        <div className="flex justify-end items-center">
-          <BeatLoader className="my-12" color="#4B5563" />
-        </div>
-      ) : (
+      {dataLoaded ? (
         <>
-          <Head>
-            <title>
-              {data.title} {data.category} Price & Specs BD
-            </title>
-          </Head>
+          <NextSeo
+            title={`${data.title} Price Specification | Price In Bangladesh`}
+            description={`${data.title} ${data.category} is by ${data.brand}. know full details`}
+          />
+          <nav
+            className="flex my-2 px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+            aria-label="Breadcrumb"
+          >
+            <ol className="inline-flex items-center space-x-1 md:space-x-3">
+              <li className="inline-flex items-center">
+                <Link
+                  href="/"
+                  className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="w-4 h-4 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                  </svg>
+                  Home
+                </Link>
+              </li>
+              <li>
+                <div className="flex items-center">
+                  <svg
+                    aria-hidden="true"
+                    className="w-6 h-6 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <Link
+                    href={`/brand/${data.brand.toLowerCase().replace(" ", "")}`}
+                    className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white"
+                  >
+                    {data.brand}
+                  </Link>
+                </div>
+              </li>
+              <li aria-current="page">
+                <div className="flex items-center">
+                  <svg
+                    aria-hidden="true"
+                    className="w-6 h-6 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">
+                    {data.title}
+                  </span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+
           <div className="flex flex-col items-center justify-center">
             <h1 className="text-3xl font-bold dark:text-white">{data.title}</h1>
             <Image
@@ -104,7 +122,7 @@ function GadgetPage({ gadget }) {
             />
             <div
               className="mt-5 text-lg
-             dark:text-white"
+               dark:text-white"
             >
               <div className="text-center">
                 <h1 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -115,7 +133,7 @@ function GadgetPage({ gadget }) {
                   {" "}
                   {data.brand}
                 </span>
-                <p class="gray-400 whitespace-normal text-black dark:text-gray-400">
+                <p className="gray-400 whitespace-normal text-black dark:text-gray-400">
                   {data?.title} {data.category} Price starts from{" "}
                   <span className="font-bold">
                     {data.price?.replace(" (approx)", "") === "0.00 Taka" ? (
@@ -135,7 +153,7 @@ function GadgetPage({ gadget }) {
                 <tr className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white">
                   <th
                     className="w-2/4 p-2 border border-gray-400 text-black dark:bg-gray-800
-             dark:text-white"
+               dark:text-white"
                   >
                     Specification
                   </th>
@@ -170,9 +188,9 @@ function GadgetPage({ gadget }) {
             </table>
             <div>
               <div className="text-center">
-                <h4 class="my-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-xl lg:text-xl dark:text-white">
+                <h4 className="my-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-xl lg:text-xl dark:text-white">
                   More By
-                  <mark class="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">
+                  <mark className="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">
                     {data.brand}
                   </mark>{" "}
                 </h4>
@@ -198,15 +216,42 @@ function GadgetPage({ gadget }) {
             </p>
           </div>
         </>
+      ) : (
+        <div className="flex justify-end items-center">
+          <BeatLoader className="my-12" color="#4B5563" />
+        </div>
       )}
     </>
   );
-}
+};
+
 export async function getServerSideProps(context) {
   const { gadget } = context.query;
-  return {
-    props: { gadget },
-  };
-}
+  const lastFiveDigits = gadget.slice(-5);
 
-export default GadgetPage;
+  let dataLoaded = false; // Initialize dataLoaded to false
+
+  try {
+    const response = await axios.get(
+      `https://specificationsbd.vercel.app/api/v1/gadgets/details?apikey=${apiKey}&id=${lastFiveDigits}`
+    );
+
+    dataLoaded = true; // Set dataLoaded to true if data is successfully fetched
+
+    return {
+      props: {
+        details: response.data,
+        dataLoaded: dataLoaded, // Pass dataLoaded as a prop
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        gadgetsData: {},
+        dataLoaded: dataLoaded, // Pass dataLoaded as a prop
+      },
+    };
+  }
+}
+export default Id;

@@ -14,8 +14,7 @@ const ListGroup = ({ items }) => {
           className="py-4 px-2 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
         >
           <Link
-            //  href={`/brands/${item.brandName.toLowerCase()}`}
-            href={`#`}
+            href={`/brand/${item.brandName.toLowerCase()}`}
             className="block"
           >
             <p className="text-lg font-medium text-gray-900 dark:text-white">
@@ -51,15 +50,13 @@ const LeftSide = () => {
         Total Brands: {totalBrands}
       </h2>
       {loading ? (
-        <div className="sweet-loading">
-          <PropagateLoader className="w-full" size={8} color={"#FF8C00"} />
-        </div>
+        <p className="text-center">Loading...</p>
       ) : (
         brands && (
           <>
             <ListGroup items={brands} />
             <Link
-              href={`#`}
+              href={`/brands`}
               className="block py-4 px-2 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               <p className="font-bold text-lg text-gray-900 dark:text-white">

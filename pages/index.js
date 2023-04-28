@@ -133,7 +133,7 @@ const Index = ({ gadgetsData }) => {
             <div className="ml-3">
               <label
                 htmlFor="itemsPerPage"
-                className="font-medium mr-2 dark:text-white"
+                className="font-medium mr-2 text-black dark:text-white"
               >
                 Items per page:
               </label>
@@ -160,7 +160,7 @@ const Index = ({ gadgetsData }) => {
               <div className="flex">
                 {paginationButtons.map((button) => (
                   <Link
-                    href={`/smart-phones/${button.page}`}
+                    href={`/page/${button.page}`}
                     key={button.label}
                     className={`px-4 py-2 mr-1 rounded-md text-white ${
                       currentPage === button.page

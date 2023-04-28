@@ -1,21 +1,42 @@
-import { useRouter } from "next/router";
-import useSWR from "swr";
-import { useState, useEffect } from "react";
 import CommonCard from "@/components/cards/common/CommonCard";
-import { allGadgets, smartPhones, smartWatches } from "@/utils/api";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { BeatLoader } from "react-spinners";
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
-
-export default function LatestGadgets() {
-  const router = useRouter();
-  const [itemsPerPage, setItemsPerPage] = useState(
-    typeof window !== "undefined"
-      ? parseInt(localStorage.getItem("itemsPerPage")) || 16
-      : 16
-  );
-  const maxPageNumbersToShow = 5;
+import cookie from "cookie";
+import dotenv from "dotenv";
+import { NextSeo } from "next-seo";
+dotenv.config();
+const apiKey = process.env.API_KEY;
+const Index = ({ gadgetsData, brandName, total_count }) => {
+  const [gadgets, setGadgets] = useState(gadgetsData.gadgets);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(gadgetsData.total_pages);
+  const [totalCount, setTotalCount] = useState(gadgetsData.total_count);
+  const [itemsPerPage, setItemsPerPage] = useState(16);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const handleFetchData = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await axios.get(
+        `https://specificationsbd.vercel.app/api/v1/gadgets?brandName=${brandName}?&page=${currentPage}&limit=${itemsPerPage}`
+      );
+
+      setGadgets(response.data.gadgets);
+      setTotalPages(response.data.total_pages);
+      setTotalCount(response.data.total_count);
+    } catch (error) {
+      console.error(error);
+    }
+
+    setIsLoading(false);
+  };
+  useEffect(() => {
+    handleFetchData();
+  }, [currentPage, itemsPerPage]);
 
   useEffect(() => {
     const { id } = router.query;
@@ -23,143 +44,238 @@ export default function LatestGadgets() {
       setCurrentPage(parseInt(id));
     }
   }, [router.query]);
-
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("itemsPerPage", itemsPerPage);
+    const cookies = cookie.parse(document.cookie);
+    const defaultItemsPerPage = parseInt(cookies.itemsPerPage) || 16;
+    setItemsPerPage(defaultItemsPerPage);
+  }, []);
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
-  }, [itemsPerPage]);
-
-  const { data, error, isLoading } = useSWR(
-    `${smartPhones}page=${currentPage}&limit=${itemsPerPage}`,
-    fetcher
-  );
-
-  const gadgets = data?.gadgets || [];
-  const totalItems = data?.total_count || 0;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  if (error) return <div>Failed to load gadgets</div>;
-  if (!data && isLoading)
-    return (
-      <div className="flex justify-end items-center">
-        <BeatLoader className="my-12" color="#4B5563" />
-      </div>
-    );
-
-  const handlePageChange = (pageNumber) => {
-    router.push(`/smart-phones/${pageNumber}`);
-    setCurrentPage(pageNumber);
   };
 
-  const handleItemsPerPageChange = (event) => {
-    setItemsPerPage(parseInt(event.target.value));
-    router.push(`/smart-phones/${currentPage}`);
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
-  const paginatedGadgets = gadgets.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  /* 
+  
+  Paginations
+  
+  */
+  // Calculate the starting page number of the current set of pages
+  const startPage = Math.max(currentPage - 2, 1);
+
+  // Calculate the ending page number of the current set of pages
+  const endPage = Math.min(startPage + 4, totalPages);
+
+  // Create an array of page numbers for the current set of pages
+  const pageNumbers = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i
   );
 
-  const pageNumbers = [];
+  // Determine if there are previous pages
+  const hasPrevious = startPage > 1;
 
-  if (totalPages <= maxPageNumbersToShow) {
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
-    }
-  } else {
-    const halfMaxPageNumbersToShow = Math.floor(maxPageNumbersToShow / 2);
-    let startPageNumber;
-    let endPageNumber;
+  // Determine if there are next pages
+  const hasNext = endPage < totalPages;
 
-    if (currentPage - halfMaxPageNumbersToShow <= 0) {
-      startPageNumber = 1;
-      endPageNumber = maxPageNumbersToShow;
-    } else if (currentPage + halfMaxPageNumbersToShow >= totalPages) {
-      startPageNumber = totalPages - maxPageNumbersToShow + 1;
-      endPageNumber = totalPages;
-    } else {
-      startPageNumber = currentPage - halfMaxPageNumbersToShow;
-      endPageNumber = currentPage + halfMaxPageNumbersToShow;
-    }
+  // Create an array for the pagination buttons
+  const paginationButtons = [];
 
-    for (let i = startPageNumber; i <= endPageNumber; i++) {
-      pageNumbers.push(i);
-    }
+  // Add previous button
+  if (hasPrevious) {
+    paginationButtons.push({ page: startPage - 1, label: "Previous" });
   }
 
-  return (
-    <div className="container mx-auto py-2">
-      <h1 className="text-2xl font-bold mb-4 text-center dark:text-white">
-        Latest Items
-      </h1>
-      <div className="flex justify-center pb-4">
-        <div className="ml-3">
-          <label htmlFor="itemsPerPage" className="font-medium mr-2">
-            Items per page:
-          </label>
-          <select
-            id="itemsPerPage"
-            name="itemsPerPage"
-            value={itemsPerPage}
-            onChange={handleItemsPerPageChange}
-            className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
-            <option value="8">8</option>
-            <option value="16">16</option>
-            <option value="20">24</option>
-          </select>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {gadgets.map((gadget) => (
-          <CommonCard key={gadget._id} gadget={gadget} />
-        ))}
-      </div>
-      <div className="flex justify-center items-center mt-4">
-        <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
-              currentPage === 1
-                ? "text-gray-500 cursor-not-allowed"
-                : "text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-            }`}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          {pageNumbers.map((pageNumber) => {
-            const isActive = pageNumber === currentPage;
+  // Add page number buttons
+  for (let i = 0; i < pageNumbers.length; i++) {
+    paginationButtons.push({ page: pageNumbers[i], label: pageNumbers[i] });
+  }
 
-            return (
-              <button
-                key={pageNumber}
-                onClick={() => handlePageChange(pageNumber)}
-                className={`relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium ${
-                  isActive
-                    ? "text-indigo-600 bg-indigo-100"
-                    : "text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                }`}
-              >
-                {pageNumber}
-              </button>
-            );
-          })}
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            className={`relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium ${
-              currentPage === totalPages
-                ? "text-gray-500 cursor-not-allowed"
-                : "text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-            }`}
-            disabled={currentPage === totalPages}
+  // Add next button
+  if (hasNext) {
+    paginationButtons.push({ page: endPage + 1, label: "Next" });
+  }
+
+  const handleItemsPerPageChange = (event) => {
+    const value = parseInt(event.target.value);
+    setItemsPerPage(value);
+    document.cookie = `itemsPerPage=${value}`;
+    router.reload();
+  };
+  const formattedBrandName =
+    brandName.charAt(0).toUpperCase() + brandName.slice(1).replace("-", " ");
+  return (
+    <div className="container mx-auto py-4">
+      <NextSeo
+        title={
+          currentPage > 1
+            ? ` ${formattedBrandName} Gadgets Specifications - Page ${currentPage}  | Mobile Specifications, Price | Smart Watch Specifications, Price in Bangladesh`
+            : `${formattedBrandName} Mobile Specifications, Price | Smart Watch Specifications, Price in Bangladesh`
+        }
+        description={`Find the latest mobile, smart watch specifications and prices of ${formattedBrandName} in Bangladesh. Compare deals and stay updated on the latest mobile trends and tech.`}
+      />
+      {isLoading ? (
+        <div className="flex justify-end items-center">
+          <BeatLoader className="my-12" color="#4B5563" />
+        </div>
+      ) : (
+        <>
+          <nav
+            className="flex my-2 px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+            aria-label="Breadcrumb"
           >
-            Next
-          </button>
-        </nav>
-      </div>
+            <ol className="inline-flex items-center space-x-1 md:space-x-3">
+              <li className="inline-flex items-center">
+                <Link
+                  href="/"
+                  className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="w-4 h-4 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                  </svg>
+                  Home
+                </Link>
+              </li>
+              <li>
+                <div className="flex items-center">
+                  <svg
+                    aria-hidden="true"
+                    className="w-6 h-6 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <Link
+                    href={`/brands`}
+                    className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white"
+                  >
+                    Brands
+                  </Link>
+                </div>
+              </li>
+              <li aria-current="page">
+                <div className="flex items-center">
+                  <svg
+                    aria-hidden="true"
+                    className="w-6 h-6 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">
+                    {formattedBrandName}
+                  </span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+          <h1 className="text-2xl font-bold mb-4 text-center dark:text-white">
+            {formattedBrandName} Gadgets Price And Specifications
+          </h1>
+          <p className="pb-2 text-center text-black dark:text-white">
+            Total Gadgets: <span className="font-bold">{total_count}</span>
+          </p>
+          <div className="flex justify-center pb-4">
+            <div className="ml-3">
+              <label
+                htmlFor="itemsPerPage"
+                className="font-medium mr-2 text-black dark:text-white"
+              >
+                Items per page:
+              </label>
+              <select
+                id="itemsPerPage"
+                name="itemsPerPage"
+                value={itemsPerPage}
+                onChange={handleItemsPerPageChange}
+                className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value={8}>8</option>
+                <option value={16}>16</option>
+                <option value={24}>24</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {gadgetsData.data.map((gadget) => (
+              <CommonCard key={gadget._id} gadget={gadget} />
+            ))}
+          </div>
+          <div className="flex justify-center items-center mt-4">
+            <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+              <div className="flex">
+                {paginationButtons.map((button) => (
+                  <Link
+                    href={`/brand/${brandName}/${button.page}`}
+                    key={button.label}
+                    className={`px-4 py-2 mr-1 rounded-md text-white ${
+                      currentPage === button.page
+                        ? "bg-blue-100 cursor-not-allowed"
+                        : "bg-blue-500 hover:bg-blue-700"
+                    }`}
+                  >
+                    {button.label}
+                  </Link>
+                ))}
+              </div>
+            </nav>
+          </div>
+        </>
+      )}
     </div>
   );
+};
+
+export async function getServerSideProps(context) {
+  const id = 1;
+  const brandName = context.params.brandName;
+  try {
+    const cookies = cookie.parse(context.req.headers.cookie || "");
+    const itemsPerPage = cookies.itemsPerPage || "16";
+
+    const response = await axios.get(
+      `https://specificationsbd.vercel.app/api/v1/gadgets?brandName=${brandName}?&apikey=${apiKey}&page=${id}&limit=${itemsPerPage}`
+    );
+
+    return {
+      props: {
+        gadgetsData: response.data,
+        total_count: response.data.total_count,
+        brandName,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        gadgetsData: {},
+      },
+    };
+  }
 }
+export default Index;
