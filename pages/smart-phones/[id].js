@@ -22,7 +22,7 @@ const Id = ({ gadgetsData }) => {
 
     try {
       const response = await axios.get(
-        `https://specificationsbd.vercel.app/api/v1/gadgets/category?apikey=${apiKey}&show=smartPhone&page=${currentPage}&limit=${itemsPerPage}`
+        `https://specificationsbd.vercel.app/api/v1/gadgets/category?&show=smartPhone&page=${currentPage}&limit=${itemsPerPage}`
       );
 
       setGadgets(response.data.gadgets);
@@ -107,6 +107,7 @@ const Id = ({ gadgetsData }) => {
     const value = parseInt(event.target.value);
     setItemsPerPage(value);
     document.cookie = `itemsPerPage=${value}`;
+    router.reload();
   };
 
   return (
