@@ -63,6 +63,7 @@ const Gadgets = ({ gadgetsData }) => {
   };
 
   /* 
+  /* 
   
   Paginations
   
@@ -102,12 +103,7 @@ const Gadgets = ({ gadgetsData }) => {
   if (hasNext) {
     paginationButtons.push({ page: endPage + 1, label: "..." });
   }
-  // Add page number buttons
-  for (let i = 0; i < pageNumbers.length; i++) {
-    paginationButtons.push({ page: pageNumbers[i], label: pageNumbers[i] });
-  }
 
- 
 
   const handleItemsPerPageChange = (event) => {
     const value = parseInt(event.target.value);
