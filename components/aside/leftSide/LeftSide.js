@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import { PropagateLoader } from "react-spinners";
 import { getBrands } from "@/utils/api";
 import Link from "next/link";
 
@@ -10,15 +9,12 @@ const ListGroup = ({ items }) => {
     <ul className="w-72 divide-y divide-gray-200 dark:divide-gray-600">
       {items.map((item) => (
         <li
-          key={item.brandName}
+          key={item.brand}
           className="py-4 px-2 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
         >
-          <Link
-            href={`/brand/${item.brandName.toLowerCase()}`}
-            className="block"
-          >
+          <Link href={`/brand/${item.brand.toLowerCase()}`} className="block">
             <p className="text-lg font-medium text-gray-900 dark:text-white">
-              {item.brandName}
+              {item.brand}
             </p>
           </Link>
         </li>
@@ -47,7 +43,7 @@ const LeftSide = () => {
   return (
     <div style={{ borderLeft: "3px solid #FF8C00" }}>
       <h2 className="py-4 text-xl font-bold px-2 dark:bg-gray-800 dark:text-white">
-        Total Brands: {totalBrands}
+        Brands
       </h2>
       {loading ? (
         <p className="text-center">Loading...</p>

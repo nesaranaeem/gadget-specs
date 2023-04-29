@@ -8,6 +8,7 @@ export const rightSideMenuItems = (
 
 export const mainMenuItems = [
   { href: "/", label: "Home" },
+  { href: "/brands", label: "Brands" },
   { href: "/smart-phones", label: "Smart Phones" },
   { href: "/smart-watches", label: "Smart Watches" },
   { href: "/compare", label: "Compare" },
