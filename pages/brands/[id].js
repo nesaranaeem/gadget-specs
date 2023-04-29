@@ -137,7 +137,7 @@ const Brands = ({ brandsData }) => {
 };
 
 export async function getServerSideProps(context) {
-  const { id } = context.query;
+  const id = 1;
 
   try {
     const cookies = cookie.parse(context.req.headers.cookie || "");

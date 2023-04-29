@@ -1,5 +1,6 @@
 import RelatedCard from "@/components/cards/related/RelatedCard";
 import Image from "next/image";
+import Link from "next/link";
 import { Fragment } from "react";
 
 const Details = ({ data, relatedData, loading }) => {
@@ -24,19 +25,7 @@ const Details = ({ data, relatedData, loading }) => {
   function formatSpecValue(value) {
     const trimmedValue = value.trim().replace(/\s+/g, " ");
 
-    if (trimmedValue.includes("|")) {
-      const items = trimmedValue.split("|");
-      const formattedItems = items.map((item) => {
-        return (
-          <li className="font-medium" key={item}>
-            {item.trim()}
-          </li>
-        );
-      });
-      return <>{formattedItems}</>;
-    } else {
-      return trimmedValue;
-    }
+    return trimmedValue;
   }
 
   return (
@@ -72,6 +61,7 @@ const Details = ({ data, relatedData, loading }) => {
         </div>
       </div>
       <div className="container mx-auto my-10">
+        <h3 className="text-center font-semibold pb-2">Full Details</h3>
         <table className="w-full table-fixed border-collapse border border-gray-400">
           <thead>
             <tr className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white">
@@ -111,12 +101,12 @@ const Details = ({ data, relatedData, loading }) => {
           </tbody>
         </table>
         <div>
-          <div className="text-center">
-            <h4 className="my-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-xl lg:text-xl dark:text-white">
+          <div className="flex flex-row justify-center items-center">
+            <h4 className="my-4 mr-2 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-xl lg:text-xl dark:text-white">
               More By
-              <mark className="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">
-                {data.brand}
-              </mark>{" "}
+            </h4>
+            <h4 className="px-2 text-xl text-white bg-blue-600 rounded dark:bg-blue-500">
+              {data.brand}
             </h4>
           </div>
 
@@ -129,6 +119,14 @@ const Details = ({ data, relatedData, loading }) => {
               ))}
             </div>
           )}
+        </div>
+        <div className="flex justify-center items-center mt-4">
+          <Link
+            href={`/brand/${data.brand.toLowerCase()}`}
+            className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+          >
+            View All
+          </Link>
         </div>
         <p className="my-2 dark:text-white text-justify p-3">
           It is impossible to guarantee that the information above is entirely

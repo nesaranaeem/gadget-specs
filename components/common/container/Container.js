@@ -1,7 +1,5 @@
 import CommonCard from "@/components/cards/common/CommonCard";
-import { NextSeo } from "next-seo";
-import Link from "next/link";
-import { BeatLoader } from "react-spinners";
+
 import Pagination from "../pagination/Pagination";
 
 const Container = ({
@@ -31,7 +29,7 @@ const Container = ({
             name="itemsPerPage"
             value={itemsPerPage}
             onChange={handleItemsPerPageChange}
-            className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black dark:text-white"
           >
             <option value={8}>8</option>
             <option value={16}>16</option>
