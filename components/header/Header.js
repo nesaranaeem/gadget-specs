@@ -43,7 +43,7 @@ export default function Header() {
             {mainMenuItems.map((menuItem) => (
               <>
                 <Link
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
                   href={menuItem.href}
                   key={menuItem.href}
                   onClick={closeMenu}

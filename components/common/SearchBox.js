@@ -1,5 +1,4 @@
 import { gadgetSearch } from "@/utils/api";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { IoMdSearch, IoMdClose } from "react-icons/io";
 
@@ -75,7 +74,7 @@ export const SearchBox = () => {
               href={`/details/${suggestion.title
                 .replace(/\s+/g, "-")
                 .toLowerCase()}-${suggestion.id}`}
-              className="block px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              className="block px-3 py-2 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
               onClick={() => setIsFocused(false)}
             >
               {suggestion.title}

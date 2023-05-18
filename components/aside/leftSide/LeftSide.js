@@ -13,9 +13,14 @@ const ListGroup = ({ items }) => {
           className="py-4 px-2 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
         >
           <Link href={`/brand/${item.brand.toLowerCase()}`} className="block">
-            <p className="text-lg font-medium text-gray-900 dark:text-white">
-              {item.brand}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-lg font-medium text-gray-900 dark:text-white">
+                {item.brand}
+              </p>
+              <span className="inline-flex items-center justify-center px-2 py-1 text-sm font-bold leading-none text-white bg-blue-600 rounded-full">
+                {item.count}
+              </span>
+            </div>
           </Link>
         </li>
       ))}
