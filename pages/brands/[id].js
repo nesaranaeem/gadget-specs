@@ -45,6 +45,7 @@ const Brands = ({ brandsData }) => {
       setCurrentPage(parseInt(id));
     }
   }, [router.query]);
+
   useEffect(() => {
     const cookies = cookie.parse(document.cookie);
     const defaultItemsPerPage = parseInt(cookies.brandsItemsPerPage) || 24;
@@ -160,7 +161,7 @@ const Brands = ({ brandsData }) => {
 };
 
 export async function getServerSideProps(context) {
-  const id = 1;
+  const { id } = context.query;
 
   try {
     const cookies = cookie.parse(context.req.headers.cookie || "");
