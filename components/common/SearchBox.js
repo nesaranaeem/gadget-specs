@@ -16,7 +16,7 @@ export const SearchBox = () => {
 
     if (e.target.value) {
       setTimeout(() => {
-        fetch(`${gadgetSearch}${e.target.value}`)
+        fetch(`${gadgetSearch}${e.target.value}&page=1&limit=10`)
           .then((response) => response.json())
           .then((data) => {
             setIsLoading(false);
@@ -54,7 +54,7 @@ export const SearchBox = () => {
         value={query}
         onChange={handleSearch}
         onFocus={handleFocus}
-        className="border border-gray-300 rounded-md pl-10 pr-3 py-2 w-full focus:outline-none focus:ring focus:ring-blue-400 mr-4"
+        className="border text-black dark:text-white border-gray-300 rounded-md pl-10 pr-3 py-2 w-full focus:outline-none focus:ring focus:ring-blue-400 mr-4"
       />
       {isFocused && isLoading && (
         <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 dark:border-gray-800  dark:bg-gray-900 rounded-md w-full">
@@ -83,7 +83,7 @@ export const SearchBox = () => {
         </div>
       )}
 
-      <div className="absolute top-0 right-0 mt-3 mr-3">
+      <div className="text-black dark:text-white absolute top-0 right-0 mt-3 mr-3">
         <IoMdSearch size={24} />
       </div>
     </div>
