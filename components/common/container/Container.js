@@ -13,7 +13,7 @@ const Container = ({
 }) => {
   return (
     <>
-      <h1 className="text-2xl font-bold mb-4 text-center dark:text-white">
+      <h1 className="text-2xl font-bold mb-4 text-center text-black dark:text-white">
         {mainTitle}
       </h1>
       <div className="flex justify-center pb-4">

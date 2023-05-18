@@ -28,7 +28,7 @@ export default function Header() {
           </button>
           <Link
             href="/"
-            className="text-black text-xl font-bold font-mono px-2"
+            className="text-black dark:text-white text-xl font-bold font-mono px-2"
           >
             Gadgets
           </Link>

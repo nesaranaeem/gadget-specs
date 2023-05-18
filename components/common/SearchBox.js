@@ -58,12 +58,14 @@ export const SearchBox = () => {
       />
       {isFocused && isLoading && (
         <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 dark:border-gray-800  dark:bg-gray-900 rounded-md w-full">
-          <div className="px-3 py-2">Searching...</div>
+          <div className="text-black dark:text-white px-3 py-2">
+            Searching...
+          </div>
         </div>
       )}
       {isFocused && noResults && (
         <div className="absolute top-full left-0 z-50 bg-white border border-gray-300 dark:border-gray-800  dark:bg-gray-900 rounded-md w-full">
-          <div className="px-3 py-2">No results</div>
+          <div className="text-black dark:text-white px-3 py-2">No results</div>
         </div>
       )}
       {isFocused && suggestions.length > 0 && (

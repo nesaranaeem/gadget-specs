@@ -24,7 +24,7 @@ const Pagination = ({ currentPage, totalPages, pageSlug }) => {
 
   // Add previous button
   if (hasPrevious) {
-    paginationButtons.push({ page: startPage - 1, label: "Previous" });
+    paginationButtons.push({ page: startPage - 1, label: "..." });
   }
 
   // Add page number buttons
@@ -34,7 +34,7 @@ const Pagination = ({ currentPage, totalPages, pageSlug }) => {
 
   // Add next button
   if (hasNext) {
-    paginationButtons.push({ page: endPage + 1, label: "Next" });
+    paginationButtons.push({ page: endPage + 1, label: "..." });
   }
   return (
     <>
