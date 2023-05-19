@@ -13,7 +13,7 @@ const Id = ({ details, dataLoaded }) => {
   const [loading, setLoading] = useState(true);
   const fetchRelatedData = async () => {
     const response = await fetch(
-      `https://specificationsbd.vercel.app/api/v1/gadgets?brandName=${data.brand}&page=1&limit=8`
+      `https://specificationsbd.vercel.app/api/v1/gadgets?brandName=${data.brand}&page=1&limit=8&minPrice=default&maxPrice=default`
     );
     const result = await response.json();
     setRelatedData(result.gadgets);
