@@ -1,3 +1,4 @@
+import CommonCard from "@/components/cards/common/CommonCard";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -9,14 +10,12 @@ import { NextSeo } from "next-seo";
 import Container from "@/components/common/container/Container";
 dotenv.config();
 const apiKey = process.env.API_KEY;
-const Index = ({ gadgetsData, brandName }) => {
+const Index = ({ gadgetsData, brandName, id }) => {
   const [gadgets, setGadgets] = useState(gadgetsData.gadgets);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(gadgetsData.total_pages);
   const [totalCount, setTotalCount] = useState(gadgetsData.total_count);
   const [itemsPerPage, setItemsPerPage] = useState(16);
-  const [minPrice, setMinPrice] = useState("default");
-  const [maxPrice, setMaxPrice] = useState("default");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const handleFetchData = async () => {
@@ -41,7 +40,6 @@ const Index = ({ gadgetsData, brandName }) => {
   }, [currentPage, itemsPerPage]);
 
   useEffect(() => {
-    const { id } = router.query;
     if (id) {
       setCurrentPage(parseInt(id));
     }
@@ -56,19 +54,6 @@ const Index = ({ gadgetsData, brandName }) => {
     const value = parseInt(event.target.value);
     setItemsPerPage(value);
     document.cookie = `itemsPerPage=${value}`;
-    router.reload();
-  };
-  const handlePrice = (minPrice, maxPrice) => {
-    setMinPrice(minPrice);
-    setMaxPrice(maxPrice);
-    document.cookie = `minPrice=${minPrice}`;
-    document.cookie = `maxPrice=${maxPrice}`;
-    router.reload();
-  };
-
-  const handlePriceFilter = (event) => {
-    event.preventDefault();
-    handlePrice(minPrice, maxPrice);
     router.reload();
   };
   const formattedBrandName =
@@ -134,6 +119,29 @@ const Index = ({ gadgetsData, brandName }) => {
                   </Link>
                 </div>
               </li>
+              <li>
+                <div className="flex items-center">
+                  <svg
+                    aria-hidden="true"
+                    className="w-6 h-6 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <Link
+                    href={`/brand/${brandName.toLowerCase().replace(" ", "")}`}
+                    className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white"
+                  >
+                    {formattedBrandName}
+                  </Link>
+                </div>
+              </li>
               <li aria-current="page">
                 <div className="flex items-center">
                   <svg
@@ -150,7 +158,7 @@ const Index = ({ gadgetsData, brandName }) => {
                     ></path>
                   </svg>
                   <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">
-                    {formattedBrandName}
+                    Page {currentPage}
                   </span>
                 </div>
               </li>
@@ -163,12 +171,6 @@ const Index = ({ gadgetsData, brandName }) => {
             totalPages={totalPages}
             isLoading={isLoading}
             itemsPerPage={itemsPerPage}
-            handlePrice={handlePrice}
-            setMinPrice={setMinPrice}
-            setMaxPrice={setMaxPrice}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            handlePriceFilter={handlePriceFilter}
             handleItemsPerPageChange={handleItemsPerPageChange}
             pageSlug={`brand/${brandName}`}
             mainTitle={`${formattedBrandName} Gadgets Price And Specifications`}
@@ -185,17 +187,17 @@ export async function getServerSideProps(context) {
   try {
     const cookies = cookie.parse(context.req.headers.cookie || "");
     const itemsPerPage = cookies.itemsPerPage || "16";
-    const minPrice = cookies.minPrice || "default";
-    const maxPrice = cookies.maxPrice || "default";
 
     const response = await axios.get(
-      `https://specificationsbd.vercel.app/api/v1/gadgets?brandName=${brandName}?&apikey=${apiKey}&page=${id}&limit=${itemsPerPage}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+      `https://specificationsbd.vercel.app/api/v1/gadgets?brandName=${brandName}?&apikey=${apiKey}&page=${id}&limit=${itemsPerPage}`
     );
 
     return {
       props: {
         gadgetsData: response.data,
+        total_count: response.data.total_count,
         brandName,
+        id,
       },
     };
   } catch (error) {
@@ -207,5 +209,4 @@ export async function getServerSideProps(context) {
     };
   }
 }
-
 export default Index;

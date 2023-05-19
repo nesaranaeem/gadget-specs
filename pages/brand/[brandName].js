@@ -15,8 +15,6 @@ const Index = ({ gadgetsData, brandName }) => {
   const [totalPages, setTotalPages] = useState(gadgetsData.total_pages);
   const [totalCount, setTotalCount] = useState(gadgetsData.total_count);
   const [itemsPerPage, setItemsPerPage] = useState(16);
-  const [minPrice, setMinPrice] = useState("default");
-  const [maxPrice, setMaxPrice] = useState("default");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const handleFetchData = async () => {
@@ -56,19 +54,6 @@ const Index = ({ gadgetsData, brandName }) => {
     const value = parseInt(event.target.value);
     setItemsPerPage(value);
     document.cookie = `itemsPerPage=${value}`;
-    router.reload();
-  };
-  const handlePrice = (minPrice, maxPrice) => {
-    setMinPrice(minPrice);
-    setMaxPrice(maxPrice);
-    document.cookie = `minPrice=${minPrice}`;
-    document.cookie = `maxPrice=${maxPrice}`;
-    router.reload();
-  };
-
-  const handlePriceFilter = (event) => {
-    event.preventDefault();
-    handlePrice(minPrice, maxPrice);
     router.reload();
   };
   const formattedBrandName =
@@ -163,12 +148,6 @@ const Index = ({ gadgetsData, brandName }) => {
             totalPages={totalPages}
             isLoading={isLoading}
             itemsPerPage={itemsPerPage}
-            handlePrice={handlePrice}
-            setMinPrice={setMinPrice}
-            setMaxPrice={setMaxPrice}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            handlePriceFilter={handlePriceFilter}
             handleItemsPerPageChange={handleItemsPerPageChange}
             pageSlug={`brand/${brandName}`}
             mainTitle={`${formattedBrandName} Gadgets Price And Specifications`}
@@ -185,11 +164,9 @@ export async function getServerSideProps(context) {
   try {
     const cookies = cookie.parse(context.req.headers.cookie || "");
     const itemsPerPage = cookies.itemsPerPage || "16";
-    const minPrice = cookies.minPrice || "default";
-    const maxPrice = cookies.maxPrice || "default";
 
     const response = await axios.get(
-      `https://specificationsbd.vercel.app/api/v1/gadgets?brandName=${brandName}?&apikey=${apiKey}&page=${id}&limit=${itemsPerPage}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+      `https://specificationsbd.vercel.app/api/v1/gadgets?brandName=${brandName}?&apikey=${apiKey}&page=${id}&limit=${itemsPerPage}`
     );
 
     return {
@@ -207,5 +184,4 @@ export async function getServerSideProps(context) {
     };
   }
 }
-
 export default Index;
