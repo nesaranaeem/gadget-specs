@@ -27,8 +27,9 @@ const Container = ({
       <h1 className="text-2xl font-bold mb-4 text-center text-black dark:text-white">
         {mainTitle}
       </h1>
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        {gadgetsData.status === false && (
+
+      {gadgetsData.status === false && (
+        <div className="flex items-center justify-center h-screen bg-gray-100">
           <div className="max-w-lg p-8 bg-white rounded-lg shadow-lg">
             <h1 className="text-2xl font-bold text-red-500 mb-4">Error</h1>
             <p className="text-lg text-gray-500">{gadgetsData.message}</p>
@@ -39,8 +40,9 @@ const Container = ({
               Go Back to Home
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
       <div className="flex justify-center pb-4">
         <div className="ml-3">
           <label
