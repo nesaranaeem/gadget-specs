@@ -14,6 +14,8 @@ const Index = ({ gadgetsData }) => {
   const [totalPages, setTotalPages] = useState(gadgetsData.total_pages);
   const [totalCount, setTotalCount] = useState(gadgetsData.total_count);
   const [itemsPerPage, setItemsPerPage] = useState(16);
+  const [minPrice, setMinPrice] = useState("default");
+  const [maxPrice, setMaxPrice] = useState("default");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const handleFetchData = async () => {
@@ -21,7 +23,7 @@ const Index = ({ gadgetsData }) => {
 
     try {
       const response = await axios.get(
-        `https://specificationsbd.vercel.app/api/v1/gadgets/category?&show=all&page=${currentPage}&limit=${itemsPerPage}`
+        `https://specificationsbd.vercel.app/api/v1/gadgets/category?&show=all&page=${currentPage}&limit=${itemsPerPage}&minPrice=${minPrice}&maxPrice=${maxPrice}`
       );
 
       setGadgets(response.data.gadgets);
@@ -55,7 +57,18 @@ const Index = ({ gadgetsData }) => {
     document.cookie = `itemsPerPage=${value}`;
     router.reload();
   };
+  const handlePrice = (minPrice, maxPrice) => {
+    setMinPrice(minPrice);
+    setMaxPrice(maxPrice);
+    document.cookie = `minPrice=${minPrice}`;
+    document.cookie = `maxPrice=${maxPrice}`;
+    router.reload();
+  };
 
+  const handlePriceFilter = (event) => {
+    event.preventDefault();
+    handlePrice(minPrice, maxPrice);
+  };
   return (
     <div className="container mx-auto py-4">
       <NextSeo
@@ -79,6 +92,12 @@ const Index = ({ gadgetsData }) => {
             totalPages={totalPages}
             isLoading={isLoading}
             itemsPerPage={itemsPerPage}
+            handlePrice={handlePrice}
+            setMinPrice={setMinPrice}
+            setMaxPrice={setMaxPrice}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            handlePriceFilter={handlePriceFilter}
             handleItemsPerPageChange={handleItemsPerPageChange}
             pageSlug="/page"
             mainTitle="Gadgets Price And Specifications"
@@ -95,9 +114,11 @@ export async function getServerSideProps(context) {
   try {
     const cookies = cookie.parse(context.req.headers.cookie || "");
     const itemsPerPage = cookies.itemsPerPage || "16";
+    const minPrice = cookies.minPrice || "default";
+    const maxPrice = cookies.maxPrice || "default";
 
     const response = await axios.get(
-      `https://specificationsbd.vercel.app/api/v1/gadgets/category?apikey=${apiKey}&show=all&&page=${id}&limit=${itemsPerPage}`
+      `https://specificationsbd.vercel.app/api/v1/gadgets/category?apikey=${apiKey}&show=all&&page=${id}&limit=${itemsPerPage}&minPrice=${minPrice}&maxPrice=${maxPrice}`
     );
 
     return {

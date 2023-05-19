@@ -25,13 +25,13 @@ const CommonCard = ({ gadget }) => {
         </h2>
 
         <p className="text-gray-700 mb-2 dark:text-white">{gadget.brand}</p>
-        <p className="text-gray-700 mb-2 font-bold dark:text-white">
-          {gadget.price.replace(" (approx)", "") === "0.00 Taka" ? (
+        {/* <p className="text-gray-700 mb-2 font-bold dark:text-white">
+          {gadget?.price?.replace(" (approx)", "") === "0.00 Taka" ? (
             <span className="text-red-600">TBA</span>
           ) : (
             gadget.price.replace(" (approx)", "").replace(".00", "")
           )}
-        </p>
+        </p> */}
 
         <Link
           href={`/details/${gadget.title
