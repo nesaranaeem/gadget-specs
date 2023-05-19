@@ -16,7 +16,7 @@ export const SearchBox = () => {
 
     if (e.target.value) {
       setTimeout(() => {
-        fetch(`${gadgetSearch}${e.target.value}&page=1&limit=10`)
+        fetch(`${gadgetSearch}${e.target.value}`)
           .then((response) => response.json())
           .then((data) => {
             setIsLoading(false);

@@ -49,7 +49,7 @@ const CategoryContainer = ({
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-4">
             {brands.map((brand) => (
               <div className="max-w-xs rounded overflow-hidden shadow-lg">
-                <div className="bg-gray-400 h-40 flex justify-center items-center text-white text-4xl font-bold">
+                <div className="bg-gray-400 h-40 flex justify-center items-center text-center text-white text-4xl font-bold">
                   {brand.brandName.charAt(0)}
                 </div>
                 <div className="px-6 py-4">
@@ -65,7 +65,10 @@ const CategoryContainer = ({
                         : brand.brandName}
                     </h2>
                   </div>
-                  <div className="flex justify-center items-center">
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="inline-flex mb-3 items-center justify-center px-2 py-1 text-sm font-bold leading-none text-white bg-blue-600 rounded-full">
+                      {brand.count}
+                    </div>
                     <Link
                       href={`/brand/${brand.brandName.toLowerCase()}`}
                       className=" text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"

@@ -79,6 +79,17 @@ export default function Header() {
       <div className="px-4 py-5 border-b border-gray-600 dark:border-gray-800 bg-white  dark:bg-gray-900 dark:text-white">
         <SearchBox />
       </div>
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="max-w-md p-8 bg-white rounded shadow-lg">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            Site Under Maintenance
+          </h1>
+          <p className="text-gray-600 mb-8">
+            We apologize for the inconvenience. The site is currently undergoing
+            maintenance and will be back online soon.
+          </p>
+        </div>
+      </div>
     </>
   );
 }
