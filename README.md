@@ -6,7 +6,7 @@ Gadget Specs is a powerful project based on the MERN stack technology with Next.
 
 For Back-End Code Please Check: [https://github.com/nesaranaeem/gadget-specs-backend](https://github.com/nesaranaeem/gadget-specs-backend)
 
-![MedeBD](/SCREENSHOT/main.png)
+![Gadget Specs](/SCREENSHOT/main.png)
 
 ## Features
 
@@ -16,7 +16,7 @@ For Back-End Code Please Check: [https://github.com/nesaranaeem/gadget-specs-bac
 
 - **Light Mode/Dark Mode:** You can toggle light mode or dark mode theme.
 
-- **Next.js Powered:** MedeBD is built with Next.js, ensuring a fast, interactive, and responsive user experience.
+- **Next.js Powered:** Gadget Specs is built with Next.js, ensuring a fast, interactive, and responsive user experience.
 
 ## Installation
 
@@ -42,7 +42,7 @@ npm install
 npm run dev
 ```
 
-5. Access MedeBD in your browser at
+5. Access Gadget Specs in your browser at
 
 ```
 http://localhost:3000
