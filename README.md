@@ -1,38 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Gadget Specs - Your Complete Gadget Specification
 
-## Getting Started
+Gadget Specs is a powerful project based on the MERN stack technology with Next.js at its core. This project serves as a comprehensive gadget specification including smart phones, smart watches etc.
 
-First, run the development server:
+## Back-End
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+For Back-End Code Please Check: [https://github.com/nesaranaeem/gadget-specs-backend](https://github.com/nesaranaeem/gadget-specs-backend)
+
+![MedeBD](/SCREENSHOT/main.png)
+
+## Features
+
+- **Search Suggestions:** Get real-time search suggestions as you type, making finding gadget information faster and easier.
+
+- **Items Configuration:** You can limit the number of items to display in the pages.
+
+- **Light Mode/Dark Mode:** You can toggle light mode or dark mode theme.
+
+- **Next.js Powered:** MedeBD is built with Next.js, ensuring a fast, interactive, and responsive user experience.
+
+## Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/nesaranaeem/gadget-specs.git
+   ```
+2. Navigate to the project directory:
+
+```
+cd gadget-specs
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Install dependencies:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```
+npm install
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+4. Run the development server:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+5. Access MedeBD in your browser at
 
-## Learn More
+```
+http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Technology Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js: React framework for server-side rendering and client-side navigation.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- React: Building the user interface with modular components.
 
-## Deploy on Vercel
+- Tailwind CSS: Styling the application with a utility-first CSS framework.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Dependencies
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Please see package.json for details
